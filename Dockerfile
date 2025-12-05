@@ -21,45 +21,28 @@ FROM nginx:alpine
 # Copy built static files from builder stage
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Create directories for nginx to write to (including all temp subdirectories)
-RUN mkdir -p /tmp/nginx/cache/client_temp \
-             /tmp/nginx/cache/proxy_temp \
-             /tmp/nginx/cache/fastcgi_temp \
-             /tmp/nginx/cache/uwsgi_temp \
-             /tmp/nginx/cache/scgi_temp \
-             /tmp/nginx/run && \
-    chown -R nginx:nginx /tmp/nginx && \
-    chown -R nginx:nginx /usr/share/nginx/html && \
-    chmod -R 755 /tmp/nginx
-
-# Create custom nginx configuration that works with non-root user
-RUN echo 'pid /tmp/nginx/run/nginx.pid; \
-events { \
-    worker_connections 1024; \
-} \
-http { \
-    client_body_temp_path /tmp/nginx/cache/client_temp; \
-    proxy_temp_path /tmp/nginx/cache/proxy_temp; \
-    fastcgi_temp_path /tmp/nginx/cache/fastcgi_temp; \
-    uwsgi_temp_path /tmp/nginx/cache/uwsgi_temp; \
-    scgi_temp_path /tmp/nginx/cache/scgi_temp; \
-    include /etc/nginx/mime.types; \
-    default_type application/octet-stream; \
-    server { \
-        listen 8080; \
-        root /usr/share/nginx/html; \
-        index index.html; \
-        location / { \
-            try_files $uri $uri/ /index.html; \
-        } \
+# Create nginx configuration for SPA routing
+RUN echo 'server { \
+    listen 8080; \
+    root /usr/share/nginx/html; \
+    index index.html; \
+    location / { \
+        try_files $uri $uri/ /index.html; \
     } \
-}' > /etc/nginx/nginx.conf
+}' > /etc/nginx/conf.d/default.conf
 
-# Switch to non-root user
+# Non-root user (required for OKD)
+RUN chown -R nginx:nginx /usr/share/nginx/html && \
+    chown -R nginx:nginx /var/cache/nginx && \
+    chown -R nginx:nginx /var/log/nginx && \
+    chown -R nginx:nginx /etc/nginx/conf.d && \
+    touch /var/run/nginx.pid && \
+    chown -R nginx:nginx /var/run/nginx.pid
+
 USER nginx
 
 # Expose application port
 EXPOSE 8080
 
-# Start nginx with custom config
+# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
