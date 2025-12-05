@@ -162,6 +162,7 @@ const Schedule = () => {
         </div>
       </section>
 
+      {/* TODO: Change the Event to look more like Google Calendar and get the events to open a Expanded Dialog to show the Venue, where it is, and an expanded description*/}
       {/* Schedule Timeline */}
       <section className="py-12">
         <div className="container mx-auto px-4">
@@ -224,6 +225,7 @@ const Schedule = () => {
         </div>
       </section>
 
+      {/* Remove this portion */}
       {/* Legend */}
       <section className="py-12 bg-card/50">
         <div className="container mx-auto px-4">

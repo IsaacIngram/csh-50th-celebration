@@ -66,6 +66,8 @@ const Index = () => {
       </section>
 
       {/* Event Highlights */}
+
+      {/* This needs to change to be more appealing to alumni, a block of text explaining, why you should come, why we're hosting this */}
       <section className="py-24 bg-card/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">

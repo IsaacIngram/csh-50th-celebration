@@ -91,6 +91,7 @@ const events = [
   },
 ];
 
+
 const Events = () => {
   return (
     <Layout>

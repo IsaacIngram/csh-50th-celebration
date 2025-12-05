@@ -2,6 +2,9 @@
 
 ## Project info
 
+Issues:
+- see TODO comments in files!
+
 **URL**: https://lovable.dev/projects/6496737b-f89a-4959-b3d6-bd6c336e86d5
 
 ## How can I edit this code?
